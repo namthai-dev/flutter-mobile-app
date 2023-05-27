@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../blocs/auth_bloc.dart';
+import '../blocs/events/auth_event.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.email});
@@ -9,6 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _bloc = AuthBloc();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +26,10 @@ class _HomePageState extends State<HomePage> {
         Center(
           child: ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                _bloc.eventController.sink.add(LogoutEvent());
+                Navigator.popAndPushNamed(context, "/login");
               },
-              child: const Text("Go back")),
+              child: const Text("Logout")),
         )
       ]),
     );

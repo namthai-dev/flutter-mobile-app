@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../blocs/auth_bloc.dart';
+import '../blocs/events/auth_event.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -8,6 +10,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _bloc = AuthBloc();
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -64,7 +67,8 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         String email = emailController.text;
-                        displayResult(context, email);
+                        String password = passwordController.text;
+                        loginFunction(context, email, password);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Please fill input')),
@@ -82,7 +86,22 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  displayResult(BuildContext context, String email) async {
-    await Navigator.pushNamed(context, "/home", arguments: email);
+  loginFunction(BuildContext context, String email, String password) async {
+    _bloc.eventController.sink.add(LoginEvent(email, password));
+    _bloc.stateController.stream.listen((event) async {
+      if (event.authStatus) {
+        await Navigator.pushNamed(context, "/home", arguments: email);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Wrong email or password')),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
   }
 }
