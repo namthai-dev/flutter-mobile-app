@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobile_app/pages/login.dart';
-import './route_generator.dart';
+import 'package:provider/provider.dart';
+import './models/auth.dart';
+import './routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,13 +14,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => AuthModel())],
+      child: MaterialApp(
+        title: _title,
+        theme: ThemeData(
+          primaryColor: Colors.blue,
+        ),
+        initialRoute: '/login',
+        routes: myRoutes,
       ),
-      home: const LoginPage(),
-      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }

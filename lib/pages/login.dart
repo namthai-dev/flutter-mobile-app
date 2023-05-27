@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../blocs/auth_bloc.dart';
 import '../blocs/events/auth_event.dart';
+import 'package:provider/provider.dart';
+import '../models/auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +19,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authModel = Provider.of<AuthModel>(context);
+
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -68,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                       if (_formKey.currentState!.validate()) {
                         String email = emailController.text;
                         String password = passwordController.text;
-                        loginFunction(context, email, password);
+                        loginFunction(context, authModel, email, password);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Please fill input')),
@@ -86,11 +90,14 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  loginFunction(BuildContext context, String email, String password) async {
+  loginFunction(BuildContext context, AuthModel authModel, String email,
+      String password) async {
     _bloc.eventController.sink.add(LoginEvent(email, password));
     _bloc.stateController.stream.listen((event) async {
       if (event.authStatus) {
-        await Navigator.pushNamed(context, "/home", arguments: email);
+        authModel.authState = true;
+        authModel.email = email;
+        await Navigator.pushNamed(context, "/home");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Wrong email or password')),

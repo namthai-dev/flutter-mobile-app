@@ -16,6 +16,3 @@ class RegisterEvent extends AuthEvent {
   final String password;
   final String name;
 }
-
-// event mute
-class LogoutEvent extends AuthEvent {}

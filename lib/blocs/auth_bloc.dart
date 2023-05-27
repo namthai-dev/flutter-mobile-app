@@ -27,8 +27,6 @@ class AuthBloc {
       if (event.email == "admin@example.com" && event.password == "admin1234") {
         state = AuthState(true);
       }
-    } else {
-      state = AuthState(false);
     }
 
     // add new state to state controller to pass state to UI
