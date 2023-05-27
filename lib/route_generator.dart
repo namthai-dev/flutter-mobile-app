@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './screens/login_screen.dart';
-import './screens/home_screen.dart';
+import 'pages/login.dart';
+import 'pages/home.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -9,14 +9,13 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/login':
-        return MaterialPageRoute(
-            builder: (_) => const LoginScreen(title: 'Flutter mobile app'));
+        return MaterialPageRoute(builder: (_) => const LoginPage());
       case '/home':
         // Validation of correct data type
-        if (args is List<String>) {
+        if (args is String) {
           return MaterialPageRoute(
-            builder: (_) => HomeScreen(
-              listPlayerNames: args,
+            builder: (_) => HomePage(
+              email: args,
             ),
           );
         }
