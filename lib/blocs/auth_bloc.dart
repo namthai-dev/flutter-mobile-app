@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:http/http.dart' as http;
 import './events/auth_event.dart';
 import './states/auth_state.dart';
 
@@ -21,11 +22,19 @@ class AuthBloc {
   Future<void> _mapEventToState(AuthEvent event) async {
     if (event is LoginEvent) {
       if (event.email == "admin@example.com" && event.password == "admin1234") {
-        state = AuthState(true);
+        final response = await http
+            .get(Uri.parse('https://jsonplaceholder.typicode.com/todos/1'));
+        if (response.statusCode == 200) {
+          state = AuthState(true);
+        }
       }
     } else if (event is RegisterEvent) {
       if (event.email == "admin@example.com" && event.password == "admin1234") {
-        state = AuthState(true);
+        final response = await http
+            .get(Uri.parse('https://jsonplaceholder.typicode.com/todos/1'));
+        if (response.statusCode == 200) {
+          state = AuthState(true);
+        }
       }
     }
 
